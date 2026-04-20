@@ -38,18 +38,18 @@ export default function NavDropdown({ label, items, paramKey }: Props) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(v => !v)}
-        className="flex items-center gap-1 text-gray-600 hover:text-black text-sm"
+        className="flex items-center gap-1 text-slate-400 hover:text-white transition-colors text-sm"
       >
         {label}
         <span className="text-xs">{open ? '▲' : '▼'}</span>
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 bg-white border rounded-lg shadow-lg py-1 z-50 min-w-[120px]">
+        <div className="absolute top-full left-0 mt-2 bg-[#1e1b2e] border border-purple-500/30 rounded-xl shadow-[0_0_20px_rgba(168,85,247,0.15)] py-1 z-50 min-w-[130px]">
           <Link
             href={buildHref(null)}
             onClick={() => setOpen(false)}
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            className="block px-4 py-2 text-sm text-slate-400 hover:text-white hover:bg-purple-500/10 transition-colors"
           >
             전체보기
           </Link>
@@ -58,7 +58,7 @@ export default function NavDropdown({ label, items, paramKey }: Props) {
               key={item.value}
               href={buildHref(item.value)}
               onClick={() => setOpen(false)}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+              className="block px-4 py-2 text-sm text-slate-400 hover:text-white hover:bg-purple-500/10 transition-colors"
             >
               {item.label}
             </Link>

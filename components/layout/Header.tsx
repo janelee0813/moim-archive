@@ -42,9 +42,9 @@ export default async function Header() {
   const isApproved = profile?.status === 'approved'
 
   return (
-    <header className="border-b bg-white sticky top-0 z-10">
+    <header className="border-b border-purple-500/20 bg-[#13111c]/90 backdrop-blur sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="font-bold text-lg">
+        <Link href="/" className="font-bold text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
           강남 벙지도
         </Link>
 
@@ -57,12 +57,12 @@ export default async function Header() {
         <div className="flex items-center gap-3 text-sm">
           {!user ? (
             <>
-              <Link href="/login" className="text-gray-600 hover:text-black">
+              <Link href="/login" className="text-slate-400 hover:text-white transition-colors">
                 로그인
               </Link>
               <Link
                 href="/signup"
-                className="bg-black text-white px-3 py-1.5 rounded-lg hover:bg-gray-800"
+                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1.5 rounded-lg hover:shadow-[0_0_16px_rgba(168,85,247,0.5)] transition-all duration-200"
               >
                 회원 가입
               </Link>
@@ -70,27 +70,18 @@ export default async function Header() {
           ) : (
             <>
               {isApproved && (
-                <Link
-                  href="/stores/new"
-                  className="text-gray-600 hover:text-black"
-                >
+                <Link href="/stores/new" className="text-slate-400 hover:text-white transition-colors">
                   + 가게 등록
                 </Link>
               )}
               {profile?.is_admin && (
-                <Link
-                  href="/admin"
-                  className="text-gray-600 hover:text-black"
-                >
+                <Link href="/admin" className="text-slate-400 hover:text-white transition-colors">
                   관리자
                 </Link>
               )}
-              <span className="text-gray-400">{profile?.nickname ?? '...'}</span>
+              <span className="text-slate-500">{profile?.nickname ?? '...'}</span>
               <form action={signOut}>
-                <button
-                  type="submit"
-                  className="text-gray-400 hover:text-black"
-                >
+                <button type="submit" className="text-slate-500 hover:text-white transition-colors">
                   로그아웃
                 </button>
               </form>

@@ -14,7 +14,7 @@ interface Store {
 export default function StoreList({ stores }: { stores: Store[] }) {
   if (stores.length === 0) {
     return (
-      <div className="text-center py-16 text-gray-400">
+      <div className="text-center py-16 text-slate-500">
         아직 등록된 가게가 없어요.
       </div>
     )
