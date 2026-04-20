@@ -37,7 +37,7 @@ export default async function HomePage({
               !isMapView ? 'bg-black text-white border-black' : 'hover:border-gray-400'
             }`}
           >
-            📋 리스트
+            📋 리스트 보기
           </Link>
           <Link
             href={`/?view=map${category ? `&category=${category}` : ''}${region ? `&region=${region}` : ''}`}
@@ -45,7 +45,7 @@ export default async function HomePage({
               isMapView ? 'bg-black text-white border-black' : 'hover:border-gray-400'
             }`}
           >
-            🗺️ 지도
+            🗺️ 지도로 보기
           </Link>
         </div>
 
