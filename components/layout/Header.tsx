@@ -35,7 +35,7 @@ export default async function Header() {
                 href="/signup"
                 className="bg-black text-white px-3 py-1.5 rounded-lg hover:bg-gray-800"
               >
-                가입 신청
+                회원 가입
               </Link>
             </>
           ) : (
