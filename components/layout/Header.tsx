@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { signOut } from '@/app/actions/auth'
 import Link from 'next/link'
 import NavDropdown from './NavDropdown'
+import ViewToggle from './ViewToggle'
+import { Suspense } from 'react'
 
 const CATEGORIES = [
   { label: '술집', value: '술집' },
@@ -47,8 +49,9 @@ export default async function Header() {
         </Link>
 
         <div className="flex items-center gap-6 text-sm">
-          <NavDropdown label="테마별" items={CATEGORIES} paramKey="category" />
-          <NavDropdown label="지역별" items={REGIONS} paramKey="region" />
+          <Suspense><NavDropdown label="테마별" items={CATEGORIES} paramKey="category" /></Suspense>
+          <Suspense><NavDropdown label="지역별" items={REGIONS} paramKey="region" /></Suspense>
+          <Suspense><ViewToggle /></Suspense>
         </div>
 
         <div className="flex items-center gap-3 text-sm">
