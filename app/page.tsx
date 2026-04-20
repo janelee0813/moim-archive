@@ -100,7 +100,7 @@ export default async function HomePage({
 
       {/* 리스트 or 지도 */}
       {isMapView ? (
-        <StoreMapWrapper stores={stores ?? []} />
+        <StoreMapWrapper stores={stores ?? []} kakaoKey={process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? ''} />
       ) : (
         <StoreList stores={stores ?? []} />
       )}

@@ -14,9 +14,10 @@ interface Store {
 
 interface Props {
   stores: Store[]
+  kakaoKey: string
 }
 
-export default function StoreMap({ stores }: Props) {
+export default function StoreMap({ stores, kakaoKey }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [loaded, setLoaded] = useState(false)
 
@@ -28,7 +29,7 @@ export default function StoreMap({ stores }: Props) {
     }
 
     const script = document.createElement('script')
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false`
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`
     script.async = true
     document.head.appendChild(script)
 

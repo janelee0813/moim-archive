@@ -21,6 +21,6 @@ interface Store {
   rating: number
 }
 
-export default function StoreMapWrapper({ stores }: { stores: Store[] }) {
-  return <StoreMap stores={stores} />
+export default function StoreMapWrapper({ stores, kakaoKey }: { stores: Store[]; kakaoKey: string }) {
+  return <StoreMap stores={stores} kakaoKey={kakaoKey} />
 }
