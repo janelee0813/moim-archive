@@ -24,35 +24,34 @@ export default async function HomePage({
   const CATEGORIES = ['술집', '횟집', '고기집', '이자카야', '포차', '카페', '기타']
   const REGIONS = ['강남역', '역삼', '선릉', '삼성', '압구정', '청담', '기타']
 
-  const isMapView = view === 'map'
+  const isMapView = view !== 'list'
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-6">
-        {/* 리스트/지도 탭 */}
-        <div className="flex gap-2 mb-4">
+      {/* 뷰 전환 버튼 */}
+      <div className="flex justify-end mb-4">
+        {isMapView ? (
           <Link
-            href={`/?${new URLSearchParams({ ...(category && { category }), ...(region && { region }) }).toString()}`}
-            className={`px-4 py-1.5 rounded-lg text-sm border transition-colors ${
-              !isMapView ? 'bg-black text-white border-black' : 'hover:border-gray-400'
-            }`}
+            href={`/?view=list${category ? `&category=${category}` : ''}${region ? `&region=${region}` : ''}`}
+            className="px-4 py-1.5 rounded-lg text-sm border hover:border-gray-400 transition-colors"
           >
             📋 리스트 보기
           </Link>
+        ) : (
           <Link
-            href={`/?view=map${category ? `&category=${category}` : ''}${region ? `&region=${region}` : ''}`}
-            className={`px-4 py-1.5 rounded-lg text-sm border transition-colors ${
-              isMapView ? 'bg-black text-white border-black' : 'hover:border-gray-400'
-            }`}
+            href={`/?${new URLSearchParams({ ...(category && { category }), ...(region && { region }) }).toString()}`}
+            className="px-4 py-1.5 rounded-lg text-sm border hover:border-gray-400 transition-colors"
           >
             🗺️ 지도로 보기
           </Link>
-        </div>
+        )}
+      </div>
 
+      <div className="mb-6">
         {/* 카테고리 필터 */}
         <div className="flex gap-2 flex-wrap mb-3">
           <Link
-            href={`/?${new URLSearchParams({ ...(region && { region }), ...(isMapView && { view: 'map' }) }).toString()}`}
+            href={`/?${new URLSearchParams({ ...(region && { region }), ...(!isMapView && { view: 'list' }) }).toString()}`}
             className={`px-3 py-1 rounded-full text-sm border transition-colors ${
               !category ? 'bg-black text-white border-black' : 'hover:border-gray-400'
             }`}
@@ -62,7 +61,7 @@ export default async function HomePage({
           {CATEGORIES.map(c => (
             <Link
               key={c}
-              href={`/?category=${c}${region ? `&region=${region}` : ''}${isMapView ? '&view=map' : ''}`}
+              href={`/?category=${c}${region ? `&region=${region}` : ''}${!isMapView ? '&view=list' : ''}`}
               className={`px-3 py-1 rounded-full text-sm border transition-colors ${
                 category === c ? 'bg-black text-white border-black' : 'hover:border-gray-400'
               }`}
@@ -75,7 +74,7 @@ export default async function HomePage({
         {/* 지역 필터 */}
         <div className="flex gap-2 flex-wrap">
           <Link
-            href={`/?${new URLSearchParams({ ...(category && { category }), ...(isMapView && { view: 'map' }) }).toString()}`}
+            href={`/?${new URLSearchParams({ ...(category && { category }), ...(!isMapView && { view: 'list' }) }).toString()}`}
             className={`px-3 py-1 rounded-full text-sm border transition-colors ${
               !region ? 'bg-gray-100 border-gray-300' : 'hover:border-gray-400'
             }`}
@@ -85,7 +84,7 @@ export default async function HomePage({
           {REGIONS.map(r => (
             <Link
               key={r}
-              href={`/?region=${r}${category ? `&category=${category}` : ''}${isMapView ? '&view=map' : ''}`}
+              href={`/?region=${r}${category ? `&category=${category}` : ''}${!isMapView ? '&view=list' : ''}`}
               className={`px-3 py-1 rounded-full text-sm border transition-colors ${
                 region === r ? 'bg-gray-100 border-gray-500' : 'hover:border-gray-400'
               }`}
