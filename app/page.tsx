@@ -29,8 +29,6 @@ export default async function HomePage({
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-6">
-        <h2 className="text-xl font-bold mb-4">강남권 모임 가게</h2>
-
         {/* 리스트/지도 탭 */}
         <div className="flex gap-2 mb-4">
           <Link
