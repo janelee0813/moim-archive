@@ -1,6 +1,27 @@
 import { createClient } from '@/lib/supabase/server'
 import { signOut } from '@/app/actions/auth'
 import Link from 'next/link'
+import NavDropdown from './NavDropdown'
+
+const CATEGORIES = [
+  { label: '술집', value: '술집' },
+  { label: '횟집', value: '횟집' },
+  { label: '고기집', value: '고기집' },
+  { label: '이자카야', value: '이자카야' },
+  { label: '포차', value: '포차' },
+  { label: '카페', value: '카페' },
+  { label: '기타', value: '기타' },
+]
+
+const REGIONS = [
+  { label: '강남역', value: '강남역' },
+  { label: '역삼역', value: '역삼역' },
+  { label: '선릉역', value: '선릉역' },
+  { label: '삼성역', value: '삼성역' },
+  { label: '압구정역', value: '압구정역' },
+  { label: '청담역', value: '청담역' },
+  { label: '기타', value: '기타' },
+]
 
 export default async function Header() {
   const supabase = await createClient()
@@ -24,6 +45,11 @@ export default async function Header() {
         <Link href="/" className="font-bold text-lg">
           강남 벙지도
         </Link>
+
+        <div className="flex items-center gap-6 text-sm">
+          <NavDropdown label="테마별" items={CATEGORIES} paramKey="category" />
+          <NavDropdown label="지역별" items={REGIONS} paramKey="region" />
+        </div>
 
         <div className="flex items-center gap-3 text-sm">
           {!user ? (
