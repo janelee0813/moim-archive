@@ -14,7 +14,7 @@ export const getStores = unstable_cache(
 
     let query = supabase
       .from('stores')
-      .select('*, profiles(nickname)')
+      .select('*')
       .order('created_at', { ascending: false })
 
     if (category) query = query.eq('category', category)
@@ -23,7 +23,7 @@ export const getStores = unstable_cache(
     const { data } = await query
     return data ?? []
   },
-  ['stores-v2'],
+  ['stores-v3'],
   { revalidate: 60 }
 )
 

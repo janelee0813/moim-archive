@@ -9,6 +9,7 @@ interface Store {
   reason: string
   tags: string[]
   created_at: string
+  creatorNickname?: string
 }
 
 export default function StoreList({ stores }: { stores: Store[] }) {
