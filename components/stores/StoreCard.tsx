@@ -14,29 +14,20 @@ interface Store {
 export default function StoreCard({ store }: { store: Store }) {
   return (
     <Link href={`/stores/${store.id}`}>
-      <div className="border border-purple-500/20 rounded-2xl p-5 bg-[#1e1b2e] hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all duration-200">
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex gap-2">
-            <span className="text-xs text-purple-400">{store.category}</span>
-            <span className="text-xs text-slate-500">·</span>
-            <span className="text-xs text-slate-400">{store.region}</span>
-          </div>
-          <span className="text-sm font-medium text-yellow-400">⭐ {store.rating}</span>
+      <div className="flex items-center gap-4 px-4 py-3.5 hover:bg-gray-50 transition-colors border-b border-gray-100">
+        <div className="flex-1 min-w-0">
+          <span className="font-medium text-gray-900 text-sm">{store.name}</span>
+          {store.reason && (
+            <span className="ml-2 text-xs text-gray-400 truncate hidden sm:inline">{store.reason}</span>
+          )}
         </div>
-        <h3 className="font-semibold text-base mb-1 text-white">{store.name}</h3>
-        <p className="text-sm text-slate-400 line-clamp-2 mb-3">{store.reason}</p>
-        {store.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {store.tags.map(tag => (
-              <span
-                key={tag}
-                className="text-xs px-2 py-0.5 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="flex items-center gap-3 shrink-0 text-xs text-gray-400">
+          <span>{store.category}</span>
+          <span className="text-gray-200">|</span>
+          <span>{store.region}</span>
+          <span className="text-gray-200">|</span>
+          <span className="text-yellow-500">★ {store.rating}</span>
+        </div>
       </div>
     </Link>
   )

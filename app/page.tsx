@@ -20,7 +20,7 @@ export default async function HomePage({
 
   const { data: stores } = await query
 
-  const isMapView = view !== 'list'
+  const isMapView = view === 'map'
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">

@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function ViewToggle() {
   const searchParams = useSearchParams()
-  const isMapView = searchParams.get('view') !== 'list'
+  const isMapView = searchParams.get('view') === 'map'
 
   const params = new URLSearchParams()
   const category = searchParams.get('category')
@@ -14,22 +14,22 @@ export default function ViewToggle() {
   if (region) params.set('region', region)
 
   if (isMapView) {
-    params.set('view', 'list')
     return (
       <Link
         href={`/?${params.toString()}`}
-        className="text-slate-400 hover:text-white transition-colors text-sm"
+        className="text-gray-500 hover:text-gray-900 transition-colors text-sm"
       >
-        📋 리스트 보기
+        리스트 보기
       </Link>
     )
   } else {
+    params.set('view', 'map')
     return (
       <Link
         href={`/?${params.toString()}`}
-        className="text-slate-400 hover:text-white transition-colors text-sm"
+        className="text-gray-500 hover:text-gray-900 transition-colors text-sm"
       >
-        🗺️ 지도로 보기
+        지도로 보기
       </Link>
     )
   }
