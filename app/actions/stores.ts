@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 export async function createStore(formData: FormData) {
   const supabase = await createClient()
@@ -92,6 +93,8 @@ export async function updateStore(storeId: string, formData: FormData) {
 
   if (error) return { error: error.message }
 
+  revalidatePath('/')
+  revalidatePath(`/stores/${storeId}`)
   redirect(`/stores/${storeId}`)
 }
 

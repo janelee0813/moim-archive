@@ -86,25 +86,38 @@ export default function StoreForm({ initialData }: Props) {
     setLoading(true)
     setError(null)
 
-    const address = formData.get('address') as string
-    if (address && kakaoReady) {
-      const coords = await geocodeAddress(address)
-      if (coords) {
-        setLat(coords.lat)
-        setLng(coords.lng)
-        formData.set('lat', coords.lat)
-        formData.set('lng', coords.lng)
+    try {
+      const address = formData.get('address') as string
+      if (address && kakaoReady) {
+        try {
+          const coords = await geocodeAddress(address)
+          if (coords) {
+            setLat(coords.lat)
+            setLng(coords.lng)
+            formData.set('lat', coords.lat)
+            formData.set('lng', coords.lng)
+          }
+        } catch {
+          // geocoding 실패 시 기존 좌표 유지
+        }
       }
-    }
 
-    selectedTags.forEach(tag => formData.append('tags', tag))
+      selectedTags.forEach(tag => formData.append('tags', tag))
 
-    const result = isEdit
-      ? await updateStore(initialData.id, formData)
-      : await createStore(formData)
+      const result = isEdit
+        ? await updateStore(initialData.id, formData)
+        : await createStore(formData)
 
-    if (result?.error) {
-      setError(result.error)
+      if (result?.error) {
+        setError(result.error)
+        setLoading(false)
+      }
+    } catch (e: unknown) {
+      // Next.js redirect는 에러를 던지므로 다시 던져야 함
+      if (e instanceof Error && (e as any).digest?.startsWith('NEXT_REDIRECT')) {
+        throw e
+      }
+      setError('오류가 발생했어요. 다시 시도해주세요.')
       setLoading(false)
     }
   }
