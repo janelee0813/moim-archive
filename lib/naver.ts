@@ -1,9 +1,6 @@
-import { cacheLife } from 'next/cache'
+import { unstable_cache } from 'next/cache'
 
-export async function getNaverPlaceImage(url: string): Promise<string | null> {
-  'use cache'
-  cacheLife('days')
-
+async function fetchNaverPlaceImage(url: string): Promise<string | null> {
   try {
     const res = await fetch(url, {
       headers: {
@@ -24,3 +21,9 @@ export async function getNaverPlaceImage(url: string): Promise<string | null> {
     return null
   }
 }
+
+export const getNaverPlaceImage = unstable_cache(
+  fetchNaverPlaceImage,
+  ['naver-place-image'],
+  { revalidate: 86400 }
+)
