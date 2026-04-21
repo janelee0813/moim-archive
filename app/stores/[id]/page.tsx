@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import DeleteStoreButton from '@/components/stores/DeleteStoreButton'
 import StoreDetailMap from '@/components/stores/StoreDetailMap'
-import { getNaverPlaceImage } from '@/lib/naver'
+import { getNaverPlaceImages } from '@/lib/naver'
 
 export default async function StoreDetailPage({
   params,
@@ -22,9 +22,9 @@ export default async function StoreDetailPage({
 
   if (!store) notFound()
 
-  const [{ data: { user } }, ogImage] = await Promise.all([
+  const [{ data: { user } }, images] = await Promise.all([
     supabase.auth.getUser(),
-    store.naver_place_url ? getNaverPlaceImage(store.naver_place_url) : Promise.resolve(null),
+    store.naver_place_url ? getNaverPlaceImages(store.naver_place_url) : Promise.resolve([]),
   ])
 
   let isAdmin = false
@@ -45,15 +45,19 @@ export default async function StoreDetailPage({
 
       <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
         {/* 이미지 */}
-        {ogImage && (
-          <div className="relative w-full h-56">
-            <Image
-              src={ogImage}
-              alt={store.name}
-              fill
-              className="object-cover"
-              unoptimized
-            />
+        {images.length > 0 && (
+          <div className={`grid gap-0.5 h-48 ${images.length === 1 ? 'grid-cols-1' : images.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+            {images.map((src, i) => (
+              <div key={i} className="relative overflow-hidden">
+                <Image
+                  src={src}
+                  alt={`${store.name} ${i + 1}`}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              </div>
+            ))}
           </div>
         )}
 
