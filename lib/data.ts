@@ -1,5 +1,5 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-import { cacheLife } from 'next/cache'
+import { unstable_cache } from 'next/cache'
 
 function getPublicClient() {
   return createSupabaseClient(
@@ -8,20 +8,21 @@ function getPublicClient() {
   )
 }
 
-export async function getStores(category?: string, region?: string) {
-  'use cache'
-  cacheLife('minutes')
+export const getStores = unstable_cache(
+  async (category?: string, region?: string) => {
+    const supabase = getPublicClient()
 
-  const supabase = getPublicClient()
+    let query = supabase
+      .from('stores')
+      .select('*')
+      .order('created_at', { ascending: false })
 
-  let query = supabase
-    .from('stores')
-    .select('*')
-    .order('created_at', { ascending: false })
+    if (category) query = query.eq('category', category)
+    if (region) query = query.eq('region', region)
 
-  if (category) query = query.eq('category', category)
-  if (region) query = query.eq('region', region)
-
-  const { data } = await query
-  return data ?? []
-}
+    const { data } = await query
+    return data ?? []
+  },
+  ['stores'],
+  { revalidate: 60 }
+)
