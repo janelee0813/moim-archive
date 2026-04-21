@@ -21,7 +21,7 @@ export default async function Header() {
     <header className="border-b border-gray-200 bg-white sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/" className="font-bold text-lg text-gray-900">
-          강남 벙지도
+          대동벙지도
         </Link>
 
         <div className="flex items-center gap-3 text-sm">

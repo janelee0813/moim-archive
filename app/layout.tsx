@@ -6,8 +6,8 @@ import Header from '@/components/layout/Header'
 const geist = Geist({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '모임 가게 아카이브',
-  description: '강남권 모임 장소 커뮤니티 아카이브',
+  title: '대동벙지도',
+  description: '대동벙지도 - 모임 가게 아카이브',
 }
 
 export default function RootLayout({
