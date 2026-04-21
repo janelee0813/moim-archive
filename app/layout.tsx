@@ -7,7 +7,12 @@ const geist = Geist({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: '여기벙어때',
-  description: '여기벙어때 - 모임 가게 아카이브',
+  description: '여기벙어때 - 모임이 즐거워지는 가게 아카이브',
+  openGraph: {
+    title: '여기벙어때',
+    description: '여기벙어때 - 모임이 즐거워지는 가게 아카이브',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({

@@ -14,7 +14,7 @@ export const getStores = unstable_cache(
 
     let query = supabase
       .from('stores')
-      .select('*')
+      .select('*, profiles(nickname)')
       .order('created_at', { ascending: false })
 
     if (category) query = query.eq('category', category)
@@ -23,6 +23,19 @@ export const getStores = unstable_cache(
     const { data } = await query
     return data ?? []
   },
-  ['stores'],
+  ['stores-v2'],
   { revalidate: 60 }
 )
+
+export async function getAndIncrementVisits(): Promise<number> {
+  const supabase = getPublicClient()
+  try {
+    await supabase.from('page_views').insert({})
+    const { count } = await supabase
+      .from('page_views')
+      .select('*', { count: 'exact', head: true })
+    return count ?? 0
+  } catch {
+    return 0
+  }
+}
