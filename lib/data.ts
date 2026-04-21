@@ -24,18 +24,5 @@ export const getStores = unstable_cache(
     return data ?? []
   },
   ['stores-v3'],
-  { revalidate: 60 }
+  { revalidate: 3600 }
 )
-
-export async function getAndIncrementVisits(): Promise<number> {
-  const supabase = getPublicClient()
-  try {
-    await supabase.from('page_views').insert({})
-    const { count } = await supabase
-      .from('page_views')
-      .select('*', { count: 'exact', head: true })
-    return count ?? 0
-  } catch {
-    return 0
-  }
-}

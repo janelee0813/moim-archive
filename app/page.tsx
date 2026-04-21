@@ -1,7 +1,7 @@
 import StoreList from '@/components/stores/StoreList'
 import StoreMapWrapper from '@/components/stores/StoreMapWrapper'
 import FilterBar from '@/components/FilterBar'
-import { getStores, getAndIncrementVisits } from '@/lib/data'
+import { getStores } from '@/lib/data'
 import { createClient } from '@/lib/supabase/server'
 import { Suspense } from 'react'
 
@@ -12,12 +12,8 @@ export default async function HomePage({
 }) {
   const { category, region, view } = await searchParams
 
-  const [stores, totalVisits] = await Promise.all([
-    getStores(category, region),
-    getAndIncrementVisits(),
-  ])
+  const stores = await getStores(category, region)
 
-  // profiles 테이블은 RLS로 인해 anon 클라이언트로는 join 불가 → 서버 클라이언트로 별도 조회
   const supabase = await createClient()
   const creatorIds = [...new Set((stores as any[]).map(s => s.created_by).filter(Boolean))]
   const profileMap: Record<string, string> = {}
@@ -38,7 +34,7 @@ export default async function HomePage({
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
       <Suspense>
-        <FilterBar totalVisits={totalVisits} />
+        <FilterBar />
       </Suspense>
       {isMapView ? (
         <StoreMapWrapper stores={enrichedStores} kakaoKey={process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? ''} />

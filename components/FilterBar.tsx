@@ -69,7 +69,7 @@ function FilterPopover({ label, options, paramKey, onClose }: FilterPopoverProps
   )
 }
 
-export default function FilterBar({ totalVisits = 0 }: { totalVisits?: number }) {
+export default function FilterBar() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [openFilter, setOpenFilter] = useState<'category' | 'region' | null>(null)
@@ -168,13 +168,6 @@ export default function FilterBar({ totalVisits = 0 }: { totalVisits?: number })
         {isMapView ? '리스트 보기' : '지도로 보기'}
       </button>
 
-      {totalVisits > 0 && (
-        <span className="ml-auto flex items-center gap-1.5 text-xs text-gray-400 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full">
-          <span>👀</span>
-          <span>방문자수</span>
-          <span className="font-semibold text-gray-700">{totalVisits.toLocaleString()}명</span>
-        </span>
-      )}
     </div>
   )
 }
