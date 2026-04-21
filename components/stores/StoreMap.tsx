@@ -60,7 +60,7 @@ export default function StoreMap({ stores, kakaoKey }: Props) {
       const marker = new window.kakao.maps.Marker({ map, position, title: store.name })
 
       const infoContent = `
-        <div style="padding:8px 12px; min-width:150px; filter:invert(90%) hue-rotate(180deg) brightness(85%) saturate(110%);">
+        <div style="padding:8px 12px; min-width:150px;">
           <p style="font-weight:600; font-size:13px; margin:0 0 4px;">${store.name}</p>
           <p style="font-size:11px; color:#888; margin:0;">${store.category} · ${store.region} · ⭐${store.rating}</p>
           <a href="/stores/${store.id}" style="font-size:11px; color:#1a73e8; margin-top:4px; display:block;">상세보기 →</a>
@@ -80,14 +80,7 @@ export default function StoreMap({ stores, kakaoKey }: Props) {
 
   return (
     <div className="w-full rounded-2xl overflow-hidden border border-purple-500/20">
-      <div
-        ref={mapRef}
-        style={{
-          width: '100%',
-          height: '500px',
-          filter: 'invert(90%) hue-rotate(180deg) brightness(85%) saturate(110%)',
-        }}
-      />
+      <div ref={mapRef} style={{ width: '100%', height: '500px' }} />
       {!loaded && (
         <div className="flex items-center justify-center h-[500px] bg-[#1e1b2e]">
           <p className="text-sm text-slate-500">지도 불러오는 중...</p>
