@@ -46,14 +46,24 @@ export default async function StoreDetailPage({
       <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
         {/* 이미지 */}
         {images.length > 0 && (
-          <div className={`grid gap-0.5 h-48 ${images.length === 1 ? 'grid-cols-1' : images.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+          <div className={`grid gap-0.5 h-52 ${images.length === 1 ? 'grid-cols-1' : images.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
             {images.map((src, i) => (
-              <div key={i} className="relative overflow-hidden">
+              <div key={i} className="relative overflow-hidden bg-gray-100">
+                {/* 블러 배경 */}
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  className="object-cover scale-110 blur-xl opacity-60"
+                  unoptimized
+                  aria-hidden
+                />
+                {/* 실제 이미지 (비율 유지) */}
                 <Image
                   src={src}
                   alt={`${store.name} ${i + 1}`}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   unoptimized
                 />
               </div>
