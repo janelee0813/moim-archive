@@ -73,9 +73,6 @@ export default function StoreMap({ stores, kakaoKey }: Props) {
       })
     })
 
-    if (storesWithCoords.length > 0) {
-      map.setCenter(new window.kakao.maps.LatLng(storesWithCoords[0].lat!, storesWithCoords[0].lng!))
-    }
   }, [loaded, stores])
 
   return (
