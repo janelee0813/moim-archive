@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import StoreList from '@/components/stores/StoreList'
 import StoreMapWrapper from '@/components/stores/StoreMapWrapper'
+import FilterBar from '@/components/FilterBar'
+import { Suspense } from 'react'
 
 export default async function HomePage({
   searchParams,
@@ -23,7 +25,10 @@ export default async function HomePage({
   const isMapView = view === 'map'
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <Suspense>
+        <FilterBar />
+      </Suspense>
       {isMapView ? (
         <StoreMapWrapper stores={stores ?? []} kakaoKey={process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? ''} />
       ) : (
