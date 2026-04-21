@@ -33,7 +33,7 @@ export default function SignupPage() {
               name="nickname"
               type="text"
               required
-              placeholder="커뮤니티에서 사용할 이름"
+              placeholder="채팅방 닉네임과 동일해야 승인됨. ex 제인 강남 82 남"
               className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
