@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import DeleteStoreButton from '@/components/stores/DeleteStoreButton'
 import StoreDetailMap from '@/components/stores/StoreDetailMap'
+import FavoriteButton from '@/components/stores/FavoriteButton'
 import { getNaverPlaceImages } from '@/lib/naver'
 
 export default async function StoreDetailPage({
@@ -28,13 +29,14 @@ export default async function StoreDetailPage({
   ])
 
   let isAdmin = false
+  let isFavorited = false
   if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('is_admin')
-      .eq('id', user.id)
-      .single()
+    const [{ data: profile }, { data: fav }] = await Promise.all([
+      supabase.from('profiles').select('is_admin').eq('id', user.id).single(),
+      supabase.from('favorites').select('id').eq('user_id', user.id).eq('store_id', store.id).single(),
+    ])
     isAdmin = profile?.is_admin ?? false
+    isFavorited = !!fav
   }
 
   return (
@@ -139,17 +141,22 @@ export default async function StoreDetailPage({
             <span>{new Date(store.created_at).toLocaleDateString('ko-KR')}</span>
           </div>
 
-          {(isAdmin || user?.id === store.created_by) && (
-            <div className="mt-6 pt-4 border-t flex gap-3">
-              <Link
-                href={`/stores/${store.id}/edit`}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                수정
-              </Link>
-              {isAdmin && <DeleteStoreButton storeId={store.id} />}
-            </div>
-          )}
+          <div className="mt-6 pt-4 border-t flex items-center gap-3">
+            {user && (
+              <FavoriteButton storeId={store.id} initialFavorited={isFavorited} />
+            )}
+            {(isAdmin || user?.id === store.created_by) && (
+              <>
+                <Link
+                  href={`/stores/${store.id}/edit`}
+                  className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  수정
+                </Link>
+                {isAdmin && <DeleteStoreButton storeId={store.id} />}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

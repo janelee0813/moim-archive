@@ -44,6 +44,9 @@ export default async function Header() {
                   + 가게 등록
                 </Link>
               )}
+              <Link href="/mypage" className="text-gray-500 hover:text-gray-900 transition-colors">
+                마이페이지
+              </Link>
               {profile?.is_admin && (
                 <Link href="/admin" className="text-gray-500 hover:text-gray-900 transition-colors">
                   관리자
