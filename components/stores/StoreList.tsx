@@ -38,6 +38,10 @@ export default function StoreList({ stores }: { stores: Store[] }) {
       {stores.map(store => (
         <StoreCard key={store.id} store={store} />
       ))}
+      <div className="px-4 py-4 text-center text-[11px] text-gray-300 leading-relaxed">
+        아이디어 기획 : 제인 &nbsp;·&nbsp; 개발자 : 제인 &nbsp;·&nbsp; 디자인 : 제인 &nbsp;·&nbsp; 호스팅 : 제인 &nbsp;·&nbsp; 최초가게 등록 : 제인<br />
+        그냥 제인이 혼자 삽질하며 만든 이곳은 여기벙어때.
+      </div>
     </div>
   )
 }
