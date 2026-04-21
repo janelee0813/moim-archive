@@ -23,7 +23,8 @@ export default function StoreList({ stores }: { stores: Store[] }) {
   return (
     <div className="border border-gray-200 rounded-xl overflow-hidden">
       <div className="flex items-center gap-4 px-4 py-2.5 bg-gray-50 border-b border-gray-200 text-xs text-gray-400 font-medium">
-        <span className="flex-1">가게 이름</span>
+        <span className="w-32 shrink-0">가게 이름</span>
+        <span className="flex-1 hidden sm:block">추천 이유</span>
         <div className="flex items-center gap-3 shrink-0">
           <span>카테고리</span>
           <span className="text-gray-200">|</span>
