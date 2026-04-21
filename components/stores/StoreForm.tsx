@@ -4,7 +4,7 @@ import { createStore, updateStore } from '@/app/actions/stores'
 import { useState, useEffect } from 'react'
 
 const CATEGORIES = ['게임', '고기집', '기타', '소풍', '술집', '식사', '영화', '이자카야', '카페', '포차', '횟집']
-const REGIONS = ['강남역', '역삼역', '선릉역', '삼성역', '압구정역', '청담역', '기타']
+const REGIONS = ['강남역', '역삼동', '선릉', '삼성동', '논현동', '신사동', '압구정동', '청담동', '선정릉', '강남구청', '한강', '대치동', '개포동', '기타']
 const TAG_OPTIONS = [
   '콜키지프리', '단체 가능', '조용함', '시끄러움',
   '2차 적합', '늦게까지 영업', '예약 필요', '가성비 좋음'
