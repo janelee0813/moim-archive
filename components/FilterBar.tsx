@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 
-const CATEGORIES = ['술집', '횟집', '고기집', '이자카야', '포차', '카페', '기타']
+const CATEGORIES = ['게임', '고기집', '기타', '소풍', '술집', '식사', '영화', '이자카야', '카페', '포차', '횟집']
 const REGIONS = ['강남역', '역삼역', '선릉역', '삼성역', '압구정역', '청담역', '기타']
 
 interface FilterPopoverProps {
