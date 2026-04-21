@@ -33,12 +33,13 @@ export default async function AdminStoresPage() {
       </h1>
 
       <div className="border border-gray-200 rounded-xl overflow-hidden">
-        <div className="grid grid-cols-[1fr_80px_80px_72px_100px] gap-4 px-4 py-2.5 bg-gray-50 border-b border-gray-200 text-xs text-gray-400 font-medium">
+        <div className="grid grid-cols-[1fr_90px_90px_60px_140px_100px] gap-4 px-4 py-2.5 bg-gray-50 border-b border-gray-200 text-xs text-gray-400 font-medium">
           <span>가게 이름</span>
           <span>카테고리</span>
           <span>지역</span>
           <span>별점</span>
           <span>등록자</span>
+          <span></span>
         </div>
 
         {!stores?.length ? (
@@ -49,7 +50,7 @@ export default async function AdminStoresPage() {
           stores.map(store => (
             <div
               key={store.id}
-              className="grid grid-cols-[1fr_80px_80px_72px_100px] gap-4 px-4 py-3 border-b border-gray-100 last:border-0 items-center hover:bg-gray-50"
+              className="grid grid-cols-[1fr_90px_90px_60px_140px_100px] gap-4 px-4 py-3 border-b border-gray-100 last:border-0 items-center hover:bg-gray-50"
             >
               <Link
                 href={`/stores/${store.id}`}
@@ -60,19 +61,17 @@ export default async function AdminStoresPage() {
               <span className="text-xs text-gray-500 truncate">{store.category}</span>
               <span className="text-xs text-gray-500 truncate">{store.region}</span>
               <span className="text-xs text-yellow-500">★ {store.rating}</span>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-400 truncate">
-                  {(store.profiles as any)?.nickname ?? '-'}
-                </span>
-                <div className="ml-auto flex gap-1.5">
-                  <Link
-                    href={`/stores/${store.id}/edit`}
-                    className="text-xs px-2 py-1 border border-gray-300 rounded hover:bg-gray-50"
-                  >
-                    수정
-                  </Link>
-                  <DeleteStoreButton storeId={store.id} compact />
-                </div>
+              <span className="text-xs text-gray-400 truncate">
+                {(store.profiles as any)?.nickname ?? '-'}
+              </span>
+              <div className="flex gap-1.5">
+                <Link
+                  href={`/stores/${store.id}/edit`}
+                  className="text-xs px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 whitespace-nowrap"
+                >
+                  수정
+                </Link>
+                <DeleteStoreButton storeId={store.id} compact />
               </div>
             </div>
           ))
