@@ -1,21 +1,41 @@
 'use client'
 
-import { createStore } from '@/app/actions/stores'
+import { createStore, updateStore } from '@/app/actions/stores'
 import { useState, useEffect } from 'react'
 
 const CATEGORIES = ['술집', '횟집', '고기집', '이자카야', '포차', '카페', '기타']
-const REGIONS = ['강남역', '역삼', '선릉', '삼성', '압구정', '청담', '기타']
+const REGIONS = ['강남역', '역삼역', '선릉역', '삼성역', '압구정역', '청담역', '기타']
 const TAG_OPTIONS = [
   '콜키지프리', '단체 가능', '조용함', '시끄러움',
   '2차 적합', '늦게까지 영업', '예약 필요', '가성비 좋음'
 ]
 
-export default function StoreForm() {
+interface StoreData {
+  id: string
+  name: string
+  address: string
+  region: string
+  category: string
+  rating: number
+  reason: string
+  memo: string | null
+  naver_place_url: string | null
+  tags: string[]
+  lat: number | null
+  lng: number | null
+}
+
+interface Props {
+  initialData?: StoreData
+}
+
+export default function StoreForm({ initialData }: Props) {
+  const isEdit = !!initialData
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [lat, setLat] = useState<string>('')
-  const [lng, setLng] = useState<string>('')
+  const [selectedTags, setSelectedTags] = useState<string[]>(initialData?.tags ?? [])
+  const [lat, setLat] = useState<string>(initialData?.lat?.toString() ?? '')
+  const [lng, setLng] = useState<string>(initialData?.lng?.toString() ?? '')
   const [kakaoReady, setKakaoReady] = useState(false)
 
   useEffect(() => {
@@ -50,7 +70,6 @@ export default function StoreForm() {
 
   async function geocodeAddress(address: string): Promise<{ lat: string; lng: string } | null> {
     if (!kakaoReady) return null
-
     return new Promise((resolve) => {
       const geocoder = new window.kakao.maps.services.Geocoder()
       geocoder.addressSearch(address, (result: any, status: any) => {
@@ -79,7 +98,11 @@ export default function StoreForm() {
     }
 
     selectedTags.forEach(tag => formData.append('tags', tag))
-    const result = await createStore(formData)
+
+    const result = isEdit
+      ? await updateStore(initialData.id, formData)
+      : await createStore(formData)
+
     if (result?.error) {
       setError(result.error)
       setLoading(false)
@@ -94,6 +117,7 @@ export default function StoreForm() {
           name="name"
           type="text"
           required
+          defaultValue={initialData?.name}
           className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
         />
       </div>
@@ -104,6 +128,7 @@ export default function StoreForm() {
           name="naver_place_url"
           type="url"
           placeholder="https://naver.me/..."
+          defaultValue={initialData?.naver_place_url ?? ''}
           className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
         />
       </div>
@@ -115,6 +140,7 @@ export default function StoreForm() {
           type="text"
           required
           placeholder="예: 서울 강남구 역삼동 824-25"
+          defaultValue={initialData?.address}
           className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
         />
         <p className="text-xs text-gray-400 mt-1">등록 시 자동으로 지도 좌표로 변환돼요.</p>
@@ -129,6 +155,7 @@ export default function StoreForm() {
           <select
             name="region"
             required
+            defaultValue={initialData?.region ?? ''}
             className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
           >
             <option value="">선택</option>
@@ -140,6 +167,7 @@ export default function StoreForm() {
           <select
             name="category"
             required
+            defaultValue={initialData?.category ?? ''}
             className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
           >
             <option value="">선택</option>
@@ -153,6 +181,7 @@ export default function StoreForm() {
         <select
           name="rating"
           required
+          defaultValue={initialData?.rating ?? ''}
           className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
         >
           <option value="">선택</option>
@@ -169,6 +198,7 @@ export default function StoreForm() {
           required
           rows={3}
           placeholder="이 가게를 추천하는 이유를 적어줘"
+          defaultValue={initialData?.reason}
           className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black resize-none"
         />
       </div>
@@ -179,6 +209,7 @@ export default function StoreForm() {
           name="memo"
           rows={2}
           placeholder="추가로 알면 좋은 정보 (선택)"
+          defaultValue={initialData?.memo ?? ''}
           className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black resize-none"
         />
       </div>
@@ -204,9 +235,7 @@ export default function StoreForm() {
       </div>
 
       {error && (
-        <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">
-          {error}
-        </p>
+        <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
       )}
 
       <button
@@ -214,7 +243,7 @@ export default function StoreForm() {
         disabled={loading}
         className="w-full bg-black text-white py-2 rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
       >
-        {loading ? '등록 중...' : '가게 등록하기'}
+        {loading ? (isEdit ? '수정 중...' : '등록 중...') : (isEdit ? '수정 완료' : '가게 등록하기')}
       </button>
     </form>
   )
