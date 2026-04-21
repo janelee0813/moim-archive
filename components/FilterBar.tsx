@@ -161,8 +161,10 @@ export default function FilterBar({ totalVisits = 0 }: { totalVisits?: number })
       </button>
 
       {totalVisits > 0 && (
-        <span className="ml-auto text-xs text-gray-400">
-          총 {totalVisits.toLocaleString()}명 방문
+        <span className="ml-auto flex items-center gap-1.5 text-xs text-gray-400 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full">
+          <span>👀</span>
+          <span>방문자수</span>
+          <span className="font-semibold text-gray-700">{totalVisits.toLocaleString()}명</span>
         </span>
       )}
     </div>
