@@ -32,6 +32,7 @@ export default async function Header() {
               </Link>
               <Link
                 href="/signup"
+                title="회원가입시 가게등록과 가게찜을 할 수 있어요!"
                 className="bg-gray-900 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700 transition-colors"
               >
                 회원 가입
