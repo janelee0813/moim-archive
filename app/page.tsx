@@ -1,7 +1,7 @@
-import { createClient } from '@/lib/supabase/server'
 import StoreList from '@/components/stores/StoreList'
 import StoreMapWrapper from '@/components/stores/StoreMapWrapper'
 import FilterBar from '@/components/FilterBar'
+import { getStores } from '@/lib/data'
 import { Suspense } from 'react'
 
 export default async function HomePage({
@@ -10,18 +10,8 @@ export default async function HomePage({
   searchParams: Promise<{ category?: string; region?: string; view?: string }>
 }) {
   const { category, region, view } = await searchParams
-  const supabase = await createClient()
 
-  let query = supabase
-    .from('stores')
-    .select('*')
-    .order('created_at', { ascending: false })
-
-  if (category) query = query.eq('category', category)
-  if (region) query = query.eq('region', region)
-
-  const { data: stores } = await query
-
+  const stores = await getStores(category, region)
   const isMapView = view === 'map'
 
   return (
@@ -30,9 +20,9 @@ export default async function HomePage({
         <FilterBar />
       </Suspense>
       {isMapView ? (
-        <StoreMapWrapper stores={stores ?? []} kakaoKey={process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? ''} />
+        <StoreMapWrapper stores={stores} kakaoKey={process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? ''} />
       ) : (
-        <StoreList stores={stores ?? []} />
+        <StoreList stores={stores} />
       )}
     </div>
   )

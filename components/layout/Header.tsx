@@ -6,15 +6,14 @@ export default async function Header() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  let profile = null
-  if (user) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('nickname, status, is_admin')
-      .eq('id', user.id)
-      .single()
-    profile = data
-  }
+  const profile = user
+    ? await supabase
+        .from('profiles')
+        .select('nickname, status, is_admin')
+        .eq('id', user.id)
+        .single()
+        .then(({ data }) => data)
+    : null
 
   const isApproved = profile?.status === 'approved'
 
