@@ -58,3 +58,29 @@ export async function rejectUser(userId: string, reason?: string) {
   revalidatePath('/admin/users')
   return { success: true }
 }
+
+export async function toggleAdmin(targetUserId: string, currentIsAdmin: boolean) {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: '로그인 필요' }
+
+  const { data: admin } = await supabase
+    .from('profiles')
+    .select('is_admin')
+    .eq('id', user.id)
+    .single()
+
+  if (!admin?.is_admin) return { error: '권한 없음' }
+  if (targetUserId === user.id) return { error: '본인의 관리자 권한은 변경할 수 없어요.' }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ is_admin: !currentIsAdmin })
+    .eq('id', targetUserId)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/admin/users')
+  return { success: true }
+}
