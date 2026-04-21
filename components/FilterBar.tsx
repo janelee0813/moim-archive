@@ -148,6 +148,14 @@ export default function FilterBar({ totalVisits = 0 }: { totalVisits?: number })
         )}
       </div>
 
+      {/* 제휴할인 (준비 중) */}
+      <button
+        disabled
+        className="px-4 py-2 rounded-xl text-sm border border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
+      >
+        제휴할인
+      </button>
+
       {/* 지도/리스트 토글 */}
       <button
         onClick={toggleView}
