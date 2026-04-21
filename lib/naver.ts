@@ -15,21 +15,29 @@ async function fetchNaverPlaceImages(url: string): Promise<string[]> {
     const html = await res.text()
     const images: string[] = []
 
-    // og:image meta tags (both attribute orders)
-    const ogMatches = [
-      ...html.matchAll(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/g),
-      ...html.matchAll(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/g),
-    ]
-    for (const m of ogMatches) {
-      if (m[1] && !images.includes(m[1])) images.push(m[1])
+    function add(src: string) {
+      const cleaned = src.replace(/\\u002F/g, '/').replace(/\\\//g, '/').replace(/&amp;/g, '&')
+      if (cleaned.startsWith('http') && !images.includes(cleaned)) images.push(cleaned)
     }
 
-    // Naver Place stores images in JSON embedded in script tags
-    // Look for psThumUrl or imageUrl patterns common in Naver Place JSON
-    const jsonImageMatches = html.matchAll(/"(?:psThumUrl|imageUrl|photoUrl|imgUrl)"\s*:\s*"([^"]+)"/g)
-    for (const m of jsonImageMatches) {
-      const imgUrl = m[1].replace(/\\u002F/g, '/').replace(/\\\//g, '/')
-      if (imgUrl.startsWith('http') && !images.includes(imgUrl)) images.push(imgUrl)
+    // 1. og:image meta tag
+    for (const m of [
+      ...html.matchAll(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/g),
+      ...html.matchAll(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/g),
+    ]) add(m[1])
+
+    // 2. Naver CDN image URLs embedded directly in HTML/JS
+    // ldb-phinf: 네이버 플레이스 사진
+    // search.pstatic: 썸네일
+    // naverbooking-phinf: 예약 사진
+    for (const m of html.matchAll(/https:\/\/(?:ldb-phinf|naverbooking-phinf|ssl\.pstatic|search\.pstatic)\.(?:pstatic\.net|net)\/[^"'\s\\)>]+/g)) {
+      const src = m[0].split('"')[0].split("'")[0]
+      if (/\.(jpg|jpeg|png|webp)/i.test(src)) add(src)
+    }
+
+    // 3. JSON key patterns in embedded scripts
+    for (const m of html.matchAll(/"(?:psThumUrl|imageUrl|photoUrl|imgUrl|thumbnailUrl|thumb)"\s*:\s*"([^"]+)"/g)) {
+      add(m[1])
     }
 
     return images.slice(0, 3)
@@ -40,6 +48,6 @@ async function fetchNaverPlaceImages(url: string): Promise<string[]> {
 
 export const getNaverPlaceImages = unstable_cache(
   fetchNaverPlaceImages,
-  ['naver-place-images'],
+  ['naver-place-images-v2'],
   { revalidate: 86400 }
 )
