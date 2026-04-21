@@ -113,6 +113,7 @@ export default async function StoreDetailPage({
                 lat={store.lat}
                 lng={store.lng}
                 name={store.name}
+                kakaoKey={process.env.NEXT_PUBLIC_KAKAO_MAP_KEY ?? ''}
               />
             </div>
           )}

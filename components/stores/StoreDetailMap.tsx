@@ -6,9 +6,10 @@ interface Props {
   lat: number
   lng: number
   name: string
+  kakaoKey: string
 }
 
-export default function StoreDetailMap({ lat, lng, name }: Props) {
+export default function StoreDetailMap({ lat, lng, name, kakaoKey }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -24,9 +25,8 @@ export default function StoreDetailMap({ lat, lng, name }: Props) {
       return
     }
 
-    const key = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY
     const script = document.createElement('script')
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&autoload=false`
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`
     script.async = true
     script.onload = () => window.kakao.maps.load(initMap)
     document.head.appendChild(script)
