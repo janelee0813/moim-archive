@@ -1,12 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
+import { Suspense } from 'react'
 import DeleteStoreButton from '@/components/stores/DeleteStoreButton'
 import StoreDetailMap from '@/components/stores/StoreDetailMap'
 import FavoriteButton from '@/components/stores/FavoriteButton'
 import CommentSection from '@/components/stores/CommentSection'
-import { getNaverPlaceImages } from '@/lib/naver'
+import StoreImages from '@/components/stores/StoreImages'
 
 export default async function StoreDetailPage({
   params,
@@ -16,40 +16,33 @@ export default async function StoreDetailPage({
   const { id } = await params
   const supabase = await createClient()
 
-  const { data: store } = await supabase
-    .from('stores')
-    .select('*, profiles(nickname)')
-    .eq('id', id)
-    .single()
+  // 라운드 1: store + 로그인 사용자 병렬 조회
+  const [{ data: store }, { data: { user } }] = await Promise.all([
+    supabase.from('stores').select('*, profiles(nickname)').eq('id', id).single(),
+    supabase.auth.getUser(),
+  ])
 
   if (!store) notFound()
 
-  const [{ data: { user } }, images] = await Promise.all([
-    supabase.auth.getUser(),
-    store.naver_place_url ? getNaverPlaceImages(store.naver_place_url) : Promise.resolve([]),
-  ])
-
-  let isAdmin = false
-  let isFavorited = false
-  if (user) {
-    const [{ data: profile }, { data: fav }] = await Promise.all([
-      supabase.from('profiles').select('is_admin').eq('id', user.id).single(),
-      supabase.from('favorites').select('id').eq('user_id', user.id).eq('store_id', store.id).single(),
-    ])
-    isAdmin = profile?.is_admin ?? false
-    isFavorited = !!fav
-  }
-
-  const [{ count: favCount }, { data: commentsRaw }] = await Promise.all([
+  // 라운드 2: 나머지 모두 병렬 조회 (네이버 이미지는 Suspense로 분리)
+  const [profileRes, favRes, favCountRes, commentsRes] = await Promise.all([
+    user
+      ? supabase.from('profiles').select('is_admin').eq('id', user.id).single()
+      : Promise.resolve({ data: null }),
+    user
+      ? supabase.from('favorites').select('id').eq('user_id', user.id).eq('store_id', id).single()
+      : Promise.resolve({ data: null }),
     supabase.from('favorites').select('*', { count: 'exact', head: true }).eq('store_id', id),
-    supabase
-      .from('store_comments')
-      .select('id, content, created_at, user_id')
-      .eq('store_id', id)
-      .order('created_at', { ascending: true }),
+    supabase.from('store_comments').select('id, content, created_at, user_id').eq('store_id', id).order('created_at', { ascending: true }),
   ])
 
-  const commentUserIds = [...new Set((commentsRaw ?? []).map((c: any) => c.user_id))]
+  const isAdmin = (profileRes as any).data?.is_admin ?? false
+  const isFavorited = !!(favRes as any).data
+  const favCount = (favCountRes as any).count ?? 0
+  const commentsRaw = (commentsRes as any).data ?? []
+
+  // 라운드 3: 댓글 작성자 닉네임
+  const commentUserIds = [...new Set(commentsRaw.map((c: any) => c.user_id))]
   const commentProfileMap: Record<string, string> = {}
   if (commentUserIds.length > 0) {
     const { data: commentProfiles } = await supabase
@@ -59,7 +52,7 @@ export default async function StoreDetailPage({
     for (const p of commentProfiles ?? []) commentProfileMap[p.id] = p.nickname
   }
 
-  const comments = (commentsRaw ?? []).map((c: any) => ({
+  const comments = commentsRaw.map((c: any) => ({
     id: c.id,
     content: c.content,
     created_at: c.created_at,
@@ -74,29 +67,11 @@ export default async function StoreDetailPage({
       </Link>
 
       <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-        {/* 이미지 */}
-        {images.length > 0 && (
-          <div className={`grid gap-0.5 h-52 ${images.length === 1 ? 'grid-cols-1' : images.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
-            {images.map((src, i) => (
-              <div key={i} className="relative overflow-hidden bg-gray-100">
-                <Image
-                  src={src}
-                  alt=""
-                  fill
-                  className="object-cover scale-110 blur-xl opacity-60"
-                  unoptimized
-                  aria-hidden
-                />
-                <Image
-                  src={src}
-                  alt={`${store.name} ${i + 1}`}
-                  fill
-                  className="object-contain"
-                  unoptimized
-                />
-              </div>
-            ))}
-          </div>
+        {/* 네이버 이미지 — Suspense로 분리해서 나머지 페이지 먼저 렌더링 */}
+        {store.naver_place_url && (
+          <Suspense fallback={<div className="h-52 bg-gray-100 animate-pulse" />}>
+            <StoreImages url={store.naver_place_url} name={store.name} />
+          </Suspense>
         )}
 
         <div className="p-6">
@@ -109,7 +84,7 @@ export default async function StoreDetailPage({
             <h1 className="text-2xl font-bold">{store.name}</h1>
             <div className="flex flex-col items-end gap-1">
               <span className="text-lg">⭐ {store.rating}</span>
-              <span className="text-xs text-red-400">♥ {favCount ?? 0}명이 찜</span>
+              <span className="text-xs text-red-400">♥ {favCount}명이 찜</span>
             </div>
           </div>
 
