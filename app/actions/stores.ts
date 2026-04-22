@@ -110,7 +110,15 @@ export async function deleteStore(storeId: string) {
     .eq('id', user.id)
     .single()
 
-  if (!profile?.is_admin) return { error: '관리자만 삭제 가능해요.' }
+  const { data: store } = await supabase
+    .from('stores')
+    .select('created_by')
+    .eq('id', storeId)
+    .single()
+
+  if (!profile?.is_admin && store?.created_by !== user.id) {
+    return { error: '본인이 등록한 가게만 삭제할 수 있어요.' }
+  }
 
   const { error } = await supabase
     .from('stores')
