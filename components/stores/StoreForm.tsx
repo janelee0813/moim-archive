@@ -253,7 +253,7 @@ export default function StoreForm({ initialData }: Props) {
 
       {!isEdit && (
         <p className="text-xs text-gray-400 text-center">
-          가게 등록 버튼은 한번만 누르신 후 잠시 기다려주세요! 등록에 10초 내외로 소요됩니다
+          가게 등록 버튼은 한번만 누르신 후 잠시 기다려주세요!<br />등록에 10초 내외로 소요됩니다
         </p>
       )}
 
