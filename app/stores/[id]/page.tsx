@@ -83,7 +83,7 @@ export default async function StoreDetailPage({
           <div className="flex items-start justify-between mb-4">
             <h1 className="text-2xl font-bold">{store.name}</h1>
             <div className="flex flex-col items-end gap-1">
-              <span className="text-lg">⭐ {store.rating}</span>
+              <span className="text-lg text-yellow-400">★ {store.rating}</span>
               <span className="text-xs text-red-400">♥ {favCount}명이 찜</span>
             </div>
           </div>
