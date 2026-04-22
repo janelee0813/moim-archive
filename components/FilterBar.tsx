@@ -97,94 +97,99 @@ export default function FilterBar() {
   }
 
   return (
-    <div ref={ref} className="flex items-center gap-2 mb-4 pb-1">
-      {/* 테마별 */}
-      <div className="relative">
+    <div ref={ref} className="flex flex-col gap-2 mb-4">
+      {/* 1줄: 필터 + 지도 버튼 */}
+      <div className="flex items-center gap-2">
+        {/* 테마별 */}
+        <div className="relative">
+          <button
+            onClick={() => setOpenFilter(v => v === 'category' ? null : 'category')}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm border transition-colors ${
+              category
+                ? 'bg-gray-900 text-white border-gray-900'
+                : openFilter === 'category'
+                ? 'border-gray-900 bg-white text-gray-900'
+                : 'border-gray-300 bg-white text-gray-600 hover:border-gray-500'
+            }`}
+          >
+            테마별{category ? `: ${category}` : ''}
+            <span className="text-xs">{openFilter === 'category' ? '▲' : '▼'}</span>
+          </button>
+          {openFilter === 'category' && (
+            <FilterPopover
+              label="테마별"
+              options={CATEGORIES}
+              paramKey="category"
+              onClose={() => setOpenFilter(null)}
+            />
+          )}
+        </div>
+
+        {/* 지역별 */}
+        <div className="relative">
+          <button
+            onClick={() => setOpenFilter(v => v === 'region' ? null : 'region')}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm border transition-colors ${
+              region
+                ? 'bg-gray-900 text-white border-gray-900'
+                : openFilter === 'region'
+                ? 'border-gray-900 bg-white text-gray-900'
+                : 'border-gray-300 bg-white text-gray-600 hover:border-gray-500'
+            }`}
+          >
+            지역별{region ? `: ${region}` : ''}
+            <span className="text-xs">{openFilter === 'region' ? '▲' : '▼'}</span>
+          </button>
+          {openFilter === 'region' && (
+            <FilterPopover
+              label="지역별"
+              options={REGIONS}
+              paramKey="region"
+              onClose={() => setOpenFilter(null)}
+            />
+          )}
+        </div>
+
+        {/* 제휴할인 (준비 중) */}
         <button
-          onClick={() => setOpenFilter(v => v === 'category' ? null : 'category')}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm border transition-colors ${
-            category
+          disabled
+          className="px-4 py-2 rounded-xl text-sm border border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
+        >
+          제휴할인
+        </button>
+
+        {/* 지도/리스트 토글 */}
+        <button
+          onClick={toggleView}
+          className={`px-4 py-2 rounded-xl text-sm border transition-colors ${
+            isMapView
               ? 'bg-gray-900 text-white border-gray-900'
-              : openFilter === 'category'
-              ? 'border-gray-900 bg-white text-gray-900'
               : 'border-gray-300 bg-white text-gray-600 hover:border-gray-500'
           }`}
         >
-          테마별{category ? `: ${category}` : ''}
-          <span className="text-xs">{openFilter === 'category' ? '▲' : '▼'}</span>
+          {isMapView ? '리스트 보기' : '지도로 보기'}
         </button>
-        {openFilter === 'category' && (
-          <FilterPopover
-            label="테마별"
-            options={CATEGORIES}
-            paramKey="category"
-            onClose={() => setOpenFilter(null)}
-          />
-        )}
       </div>
 
-      {/* 지역별 */}
-      <div className="relative">
-        <button
-          onClick={() => setOpenFilter(v => v === 'region' ? null : 'region')}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm border transition-colors ${
-            region
-              ? 'bg-gray-900 text-white border-gray-900'
-              : openFilter === 'region'
-              ? 'border-gray-900 bg-white text-gray-900'
-              : 'border-gray-300 bg-white text-gray-600 hover:border-gray-500'
-          }`}
+      {/* 2줄: 외부 링크 버튼 */}
+      <div className="flex items-center gap-2">
+        <a
+          href="https://meeting-calculator-mu.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 py-2 rounded-xl text-sm border border-gray-300 bg-white hover:border-gray-500 transition-colors text-gray-600 font-medium"
         >
-          지역별{region ? `: ${region}` : ''}
-          <span className="text-xs">{openFilter === 'region' ? '▲' : '▼'}</span>
-        </button>
-        {openFilter === 'region' && (
-          <FilterPopover
-            label="지역별"
-            options={REGIONS}
-            paramKey="region"
-            onClose={() => setOpenFilter(null)}
-          />
-        )}
+          벙비계산기
+        </a>
+        <a
+          href="https://open.kakao.com/o/geS7Tzy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 py-2 rounded-xl text-sm border border-yellow-400 bg-yellow-400 hover:bg-yellow-300 transition-colors text-gray-900 font-medium"
+        >
+          오픈카톡방
+        </a>
       </div>
-
-      {/* 제휴할인 (준비 중) */}
-      <button
-        disabled
-        className="px-4 py-2 rounded-xl text-sm border border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
-      >
-        제휴할인
-      </button>
-
-      {/* 지도/리스트 토글 */}
-      <button
-        onClick={toggleView}
-        className={`px-4 py-2 rounded-xl text-sm border transition-colors ${
-          isMapView
-            ? 'bg-gray-900 text-white border-gray-900'
-            : 'border-gray-300 bg-white text-gray-600 hover:border-gray-500'
-        }`}
-      >
-        {isMapView ? '리스트 보기' : '지도로 보기'}
-      </button>
-
-      <a
-        href="https://meeting-calculator-mu.vercel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="ml-auto px-4 py-2 rounded-xl text-sm border border-gray-300 bg-white hover:border-gray-500 transition-colors text-gray-600 font-medium shrink-0"
-      >
-        벙비계산기
-      </a>
-      <a
-        href="https://open.kakao.com/o/geS7Tzy"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="px-4 py-2 rounded-xl text-sm border border-yellow-400 bg-yellow-400 hover:bg-yellow-300 transition-colors text-gray-900 font-medium shrink-0"
-      >
-        오픈카톡방
-      </a>
-
     </div>
   )
 }
