@@ -5,6 +5,7 @@ import Image from 'next/image'
 import DeleteStoreButton from '@/components/stores/DeleteStoreButton'
 import StoreDetailMap from '@/components/stores/StoreDetailMap'
 import FavoriteButton from '@/components/stores/FavoriteButton'
+import CommentSection from '@/components/stores/CommentSection'
 import { getNaverPlaceImages } from '@/lib/naver'
 
 export default async function StoreDetailPage({
@@ -39,6 +40,23 @@ export default async function StoreDetailPage({
     isFavorited = !!fav
   }
 
+  const [{ count: favCount }, { data: commentsRaw }] = await Promise.all([
+    supabase.from('favorites').select('*', { count: 'exact', head: true }).eq('store_id', id),
+    supabase
+      .from('store_comments')
+      .select('id, content, created_at, user_id, profiles(nickname)')
+      .eq('store_id', id)
+      .order('created_at', { ascending: true }),
+  ])
+
+  const comments = (commentsRaw ?? []).map((c: any) => ({
+    id: c.id,
+    content: c.content,
+    created_at: c.created_at,
+    authorNickname: c.profiles?.nickname ?? '알 수 없음',
+    isOwner: c.user_id === user?.id,
+  }))
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <Link href="/" className="text-sm text-gray-400 hover:text-black mb-6 block">
@@ -51,7 +69,6 @@ export default async function StoreDetailPage({
           <div className={`grid gap-0.5 h-52 ${images.length === 1 ? 'grid-cols-1' : images.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
             {images.map((src, i) => (
               <div key={i} className="relative overflow-hidden bg-gray-100">
-                {/* 블러 배경 */}
                 <Image
                   src={src}
                   alt=""
@@ -60,7 +77,6 @@ export default async function StoreDetailPage({
                   unoptimized
                   aria-hidden
                 />
-                {/* 실제 이미지 (비율 유지) */}
                 <Image
                   src={src}
                   alt={`${store.name} ${i + 1}`}
@@ -81,7 +97,10 @@ export default async function StoreDetailPage({
 
           <div className="flex items-start justify-between mb-4">
             <h1 className="text-2xl font-bold">{store.name}</h1>
-            <span className="text-lg">⭐ {store.rating}</span>
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-lg">⭐ {store.rating}</span>
+              <span className="text-xs text-red-400">♥ {favCount ?? 0}명이 찜</span>
+            </div>
           </div>
 
           <p className="text-gray-500 text-sm mb-1">{store.address}</p>
@@ -121,7 +140,6 @@ export default async function StoreDetailPage({
             </div>
           )}
 
-          {/* 지도 */}
           {store.lat && store.lng && (
             <div className="mt-4">
               <p className="text-sm font-medium mb-2">위치</p>
@@ -157,6 +175,12 @@ export default async function StoreDetailPage({
               </>
             )}
           </div>
+
+          <CommentSection
+            storeId={store.id}
+            comments={comments}
+            isLoggedIn={!!user}
+          />
         </div>
       </div>
     </div>

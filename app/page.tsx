@@ -15,18 +15,36 @@ export default async function HomePage({
   const stores = await getStores(category, region)
 
   const supabase = await createClient()
+  const storeIds = (stores as any[]).map(s => s.id)
   const creatorIds = [...new Set((stores as any[]).map(s => s.created_by).filter(Boolean))]
   const profileMap: Record<string, string> = {}
-  if (creatorIds.length > 0) {
-    const { data: profiles } = await supabase
-      .from('profiles')
-      .select('id, nickname')
-      .in('id', creatorIds)
-    for (const p of profiles ?? []) profileMap[p.id] = p.nickname
-  }
+  const favCountMap: Record<string, number> = {}
+
+  await Promise.all([
+    (async () => {
+      if (creatorIds.length === 0) return
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, nickname')
+        .in('id', creatorIds)
+      for (const p of profiles ?? []) profileMap[p.id] = p.nickname
+    })(),
+    (async () => {
+      if (storeIds.length === 0) return
+      const { data: favData } = await supabase
+        .from('favorites')
+        .select('store_id')
+        .in('store_id', storeIds)
+      for (const f of favData ?? []) {
+        favCountMap[f.store_id] = (favCountMap[f.store_id] ?? 0) + 1
+      }
+    })(),
+  ])
+
   const enrichedStores = (stores as any[]).map(s => ({
     ...s,
     creatorNickname: profileMap[s.created_by] ?? '',
+    favCount: favCountMap[s.id] ?? 0,
   }))
 
   const isMapView = view === 'map'

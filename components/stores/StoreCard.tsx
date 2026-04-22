@@ -10,6 +10,7 @@ interface Store {
   tags: string[]
   created_at: string
   creatorNickname?: string
+  favCount?: number
 }
 
 export default function StoreCard({ store }: { store: Store }) {
@@ -21,7 +22,10 @@ export default function StoreCard({ store }: { store: Store }) {
         <div className="sm:hidden">
           <div className="flex items-center justify-between gap-2">
             <span className="font-medium text-sm text-gray-900 truncate">{store.name}</span>
-            <span className="text-xs text-yellow-500 shrink-0">★ {store.rating}</span>
+            <div className="flex items-center gap-1.5 shrink-0 text-xs">
+              <span className="text-red-400">♥ {store.favCount ?? 0}</span>
+              <span className="text-yellow-500">★ {store.rating}</span>
+            </div>
           </div>
           <div className="flex items-center gap-1.5 mt-0.5 text-xs text-gray-400">
             <span>{store.category}</span>
@@ -45,6 +49,8 @@ export default function StoreCard({ store }: { store: Store }) {
             <span>{store.category}</span>
             <span className="text-gray-200">|</span>
             <span>{store.region}</span>
+            <span className="text-gray-200">|</span>
+            <span className="text-red-400">♥ {store.favCount ?? 0}</span>
             <span className="text-gray-200">|</span>
             <span className="text-yellow-500">★ {store.rating}</span>
           </div>
