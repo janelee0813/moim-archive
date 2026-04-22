@@ -42,7 +42,7 @@ export default function StoreCard({ store }: { store: Store }) {
 
         {/* 데스크탑 레이아웃 */}
         <div className="hidden sm:flex items-center gap-4">
-          <span className="w-28 shrink-0 font-medium text-gray-900 text-sm truncate">{store.name}</span>
+          <span className="w-40 shrink-0 font-medium text-gray-900 text-sm truncate">{store.name}</span>
           <span className="w-24 shrink-0 text-xs text-gray-400 truncate">{store.creatorNickname || '-'}</span>
           <span className="flex-1 text-xs text-gray-400 truncate">{store.reason}</span>
           <div className="flex items-center gap-3 shrink-0 text-xs text-gray-400">
