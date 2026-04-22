@@ -44,16 +44,26 @@ export default async function StoreDetailPage({
     supabase.from('favorites').select('*', { count: 'exact', head: true }).eq('store_id', id),
     supabase
       .from('store_comments')
-      .select('id, content, created_at, user_id, profiles(nickname)')
+      .select('id, content, created_at, user_id')
       .eq('store_id', id)
       .order('created_at', { ascending: true }),
   ])
+
+  const commentUserIds = [...new Set((commentsRaw ?? []).map((c: any) => c.user_id))]
+  const commentProfileMap: Record<string, string> = {}
+  if (commentUserIds.length > 0) {
+    const { data: commentProfiles } = await supabase
+      .from('profiles')
+      .select('id, nickname')
+      .in('id', commentUserIds)
+    for (const p of commentProfiles ?? []) commentProfileMap[p.id] = p.nickname
+  }
 
   const comments = (commentsRaw ?? []).map((c: any) => ({
     id: c.id,
     content: c.content,
     created_at: c.created_at,
-    authorNickname: c.profiles?.nickname ?? '알 수 없음',
+    authorNickname: commentProfileMap[c.user_id] ?? '알 수 없음',
     isOwner: c.user_id === user?.id,
   }))
 
