@@ -119,5 +119,6 @@ export async function deleteStore(storeId: string) {
 
   if (error) return { error: error.message }
 
+  revalidatePath('/')
   redirect('/')
 }
