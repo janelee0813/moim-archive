@@ -34,6 +34,7 @@ export default function StoreForm({ initialData }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [selectedTags, setSelectedTags] = useState<string[]>(initialData?.tags ?? [])
+  const [address, setAddress] = useState<string>(initialData?.address ?? '')
   const [lat, setLat] = useState<string>(initialData?.lat?.toString() ?? '')
   const [lng, setLng] = useState<string>(initialData?.lng?.toString() ?? '')
   const [kakaoReady, setKakaoReady] = useState(false)
@@ -87,7 +88,9 @@ export default function StoreForm({ initialData }: Props) {
     setError(null)
 
     try {
-      const address = formData.get('address') as string
+      // 제어 컴포넌트 값을 formData에 명시적으로 설정
+      formData.set('address', address)
+
       if (address && kakaoReady) {
         try {
           const coords = await geocodeAddress(address)
@@ -153,7 +156,8 @@ export default function StoreForm({ initialData }: Props) {
           type="text"
           required
           placeholder="예: 서울 강남구 역삼동 824-25"
-          defaultValue={initialData?.address}
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
           className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
         />
         <p className="text-xs text-gray-400 mt-1">등록 시 자동으로 지도 좌표로 변환돼요.</p>
