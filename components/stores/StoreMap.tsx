@@ -22,9 +22,15 @@ export default function StoreMap({ stores, kakaoKey }: Props) {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    // 이미 로드된 경우
-    if (window.kakao && window.kakao.maps) {
+    // 이미 SDK가 초기화된 경우
+    if (window.kakao?.maps?.Map) {
       setLoaded(true)
+      return
+    }
+
+    // 스크립트가 이미 있지만 아직 초기화 중인 경우
+    if (window.kakao?.maps) {
+      window.kakao.maps.load(() => setLoaded(true))
       return
     }
 
@@ -76,10 +82,10 @@ export default function StoreMap({ stores, kakaoKey }: Props) {
   }, [loaded, stores])
 
   return (
-    <div className="w-full rounded-2xl overflow-hidden border border-purple-500/20">
+    <div className="w-full rounded-2xl overflow-hidden border border-purple-500/20 relative">
       <div ref={mapRef} className="w-full h-[340px] sm:h-[500px]" />
       {!loaded && (
-        <div className="flex items-center justify-center h-[340px] sm:h-[500px] bg-gray-100">
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
           <p className="text-sm text-slate-500">지도 불러오는 중...</p>
         </div>
       )}
