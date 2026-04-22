@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { signOut } from '@/app/actions/auth'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default async function Header() {
   const supabase = await createClient()
@@ -20,8 +21,8 @@ export default async function Header() {
   return (
     <header className="border-b border-gray-200 bg-white sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="font-bold text-lg text-gray-900">
-          여기벙어때
+        <Link href="/">
+          <Image src="/logo.png" alt="여기벙어때" height={36} width={120} className="object-contain" />
         </Link>
 
         <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
