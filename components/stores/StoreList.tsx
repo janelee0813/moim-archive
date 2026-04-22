@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import StoreCard from './StoreCard'
 
 interface Store {
@@ -23,17 +24,27 @@ export default function StoreList({ stores }: { stores: Store[] }) {
 
   return (
     <div className="border border-gray-200 rounded-xl overflow-hidden">
-      <div className="hidden sm:flex items-center gap-4 px-4 py-2.5 bg-gray-50 border-b border-gray-200 text-xs text-gray-400 font-medium">
-        <span className="w-28 shrink-0">가게 이름</span>
-        <span className="w-24 shrink-0 hidden sm:block">추천자</span>
-        <span className="flex-1 hidden sm:block">추천 이유</span>
-        <div className="flex items-center gap-3 shrink-0">
-          <span>카테고리</span>
-          <span className="text-gray-200">|</span>
-          <span>지역</span>
-          <span className="text-gray-200">|</span>
-          <span>별점</span>
+      <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-b border-gray-200">
+        <div className="hidden sm:flex items-center gap-4 text-xs text-gray-400 font-medium flex-1">
+          <span className="w-28 shrink-0">가게 이름</span>
+          <span className="w-24 shrink-0">추천자</span>
+          <span className="flex-1">추천 이유</span>
+          <div className="flex items-center gap-3 shrink-0">
+            <span>카테고리</span>
+            <span className="text-gray-200">|</span>
+            <span>지역</span>
+            <span className="text-gray-200">|</span>
+            <span>별점</span>
+          </div>
         </div>
+        <Link
+          href="https://open.kakao.com/o/geS7Tzy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-yellow-400 hover:bg-yellow-300 transition-colors text-xs font-medium text-gray-900 shrink-0"
+        >
+          💬 오픈카톡 참여하기
+        </Link>
       </div>
       {stores.map(store => (
         <StoreCard key={store.id} store={store} />
