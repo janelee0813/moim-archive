@@ -169,10 +169,18 @@ export default function FilterBar() {
       </button>
 
       <a
+        href="https://meeting-calculator-mu.vercel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="ml-auto px-4 py-2 rounded-xl text-sm border border-gray-300 bg-white hover:border-gray-500 transition-colors text-gray-600 font-medium shrink-0"
+      >
+        벙비계산기
+      </a>
+      <a
         href="https://open.kakao.com/o/geS7Tzy"
         target="_blank"
         rel="noopener noreferrer"
-        className="ml-auto px-4 py-2 rounded-xl text-sm border border-yellow-400 bg-yellow-400 hover:bg-yellow-300 transition-colors text-gray-900 font-medium shrink-0"
+        className="px-4 py-2 rounded-xl text-sm border border-yellow-400 bg-yellow-400 hover:bg-yellow-300 transition-colors text-gray-900 font-medium shrink-0"
       >
         오픈카톡방
       </a>
