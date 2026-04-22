@@ -97,7 +97,7 @@ export default function FilterBar() {
   }
 
   return (
-    <div ref={ref} className="flex items-center gap-2 mb-4 flex-wrap">
+    <div ref={ref} className="flex items-center gap-2 mb-4 overflow-x-auto scrollbar-hide flex-nowrap sm:flex-wrap pb-1">
       {/* 테마별 */}
       <div className="relative">
         <button

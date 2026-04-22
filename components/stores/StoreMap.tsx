@@ -77,9 +77,9 @@ export default function StoreMap({ stores, kakaoKey }: Props) {
 
   return (
     <div className="w-full rounded-2xl overflow-hidden border border-purple-500/20">
-      <div ref={mapRef} style={{ width: '100%', height: '500px' }} />
+      <div ref={mapRef} className="w-full h-[340px] sm:h-[500px]" />
       {!loaded && (
-        <div className="flex items-center justify-center h-[500px] bg-[#1e1b2e]">
+        <div className="flex items-center justify-center h-[340px] sm:h-[500px] bg-gray-100">
           <p className="text-sm text-slate-500">지도 불러오는 중...</p>
         </div>
       )}

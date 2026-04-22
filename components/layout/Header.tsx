@@ -24,16 +24,16 @@ export default async function Header() {
           여기벙어때
         </Link>
 
-        <div className="flex items-center gap-3 text-sm">
+        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
           {!user ? (
             <>
-              <Link href="/login" className="text-gray-500 hover:text-gray-900 transition-colors">
+              <Link href="/login" className="text-gray-500 hover:text-gray-900 transition-colors hidden sm:block">
                 로그인
               </Link>
               <Link
                 href="/signup"
                 title="회원가입시 가게등록과 가게찜을 할 수 있어요!"
-                className="bg-gray-900 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700 transition-colors"
+                className="bg-gray-900 text-white px-2.5 py-1.5 sm:px-3 rounded-lg hover:bg-gray-700 transition-colors"
               >
                 회원 가입
               </Link>
@@ -42,18 +42,18 @@ export default async function Header() {
             <>
               {isApproved && (
                 <Link href="/stores/new" className="text-gray-500 hover:text-gray-900 transition-colors">
-                  + 가게 등록
+                  + 등록
                 </Link>
               )}
               <Link href="/mypage" className="text-gray-500 hover:text-gray-900 transition-colors">
                 마이페이지
               </Link>
               {profile?.is_admin && (
-                <Link href="/admin" className="text-gray-500 hover:text-gray-900 transition-colors">
+                <Link href="/admin" className="text-gray-500 hover:text-gray-900 transition-colors hidden sm:block">
                   관리자
                 </Link>
               )}
-              <span className="text-gray-400">{profile?.nickname ?? '...'}</span>
+              <span className="text-gray-400 hidden sm:inline">{profile?.nickname ?? '...'}</span>
               <form action={signOut}>
                 <button type="submit" className="text-gray-400 hover:text-gray-900 transition-colors">
                   로그아웃
