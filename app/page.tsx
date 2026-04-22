@@ -2,7 +2,7 @@ import StoreList from '@/components/stores/StoreList'
 import StoreMapWrapper from '@/components/stores/StoreMapWrapper'
 import FilterBar from '@/components/FilterBar'
 import { getStores } from '@/lib/data'
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/server'
 import { Suspense } from 'react'
 
 export default async function HomePage({
@@ -14,10 +14,7 @@ export default async function HomePage({
 
   const stores = await getStores(category, region)
 
-  const supabase = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = await createClient()
   const creatorIds = [...new Set((stores as any[]).map(s => s.created_by).filter(Boolean))]
   const profileMap: Record<string, string> = {}
   if (creatorIds.length > 0) {
