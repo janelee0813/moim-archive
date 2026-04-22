@@ -97,7 +97,7 @@ export default function FilterBar() {
   }
 
   return (
-    <div ref={ref} className="flex flex-col gap-2 mb-4">
+    <div ref={ref} className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
       {/* 1줄: 필터 + 지도 버튼 */}
       <div className="flex items-center gap-2">
         {/* 테마별 */}
@@ -171,8 +171,8 @@ export default function FilterBar() {
         </button>
       </div>
 
-      {/* 2줄: 외부 링크 버튼 */}
-      <div className="flex items-center gap-2">
+      {/* 2줄(모바일) / 우측(PC): 외부 링크 버튼 */}
+      <div className="flex items-center gap-2 sm:ml-auto">
         <a
           href="https://meeting-calculator-mu.vercel.app/"
           target="_blank"
