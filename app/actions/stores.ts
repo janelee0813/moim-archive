@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 
 export async function createStore(formData: FormData) {
   const supabase = await createClient()
@@ -45,6 +45,7 @@ export async function createStore(formData: FormData) {
 
   if (error) return { error: error.message }
 
+  updateTag('stores')
   redirect(`/stores/${data.id}`)
 }
 
@@ -93,7 +94,7 @@ export async function updateStore(storeId: string, formData: FormData) {
 
   if (error) return { error: error.message }
 
-  revalidatePath('/')
+  updateTag('stores')
   revalidatePath(`/stores/${storeId}`)
   redirect(`/stores/${storeId}`)
 }
@@ -127,6 +128,6 @@ export async function deleteStore(storeId: string) {
 
   if (error) return { error: error.message }
 
-  revalidatePath('/')
+  updateTag('stores')
   redirect('/')
 }
