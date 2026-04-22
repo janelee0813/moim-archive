@@ -11,6 +11,7 @@ interface Store {
   created_at: string
   creatorNickname?: string
   favCount?: number
+  commentCount?: number
 }
 
 export default function StoreCard({ store }: { store: Store }) {
@@ -23,6 +24,7 @@ export default function StoreCard({ store }: { store: Store }) {
           <div className="flex items-center justify-between gap-2">
             <span className="font-medium text-sm text-gray-900 truncate">{store.name}</span>
             <div className="flex items-center gap-1.5 shrink-0 text-xs">
+              <span className="text-blue-400">💬 {store.commentCount ?? 0}</span>
               <span className="text-red-400">♥ {store.favCount ?? 0}</span>
               <span className="text-yellow-500">★ {store.rating}</span>
             </div>
@@ -49,6 +51,8 @@ export default function StoreCard({ store }: { store: Store }) {
             <span>{store.category}</span>
             <span className="text-gray-200">|</span>
             <span>{store.region}</span>
+            <span className="text-gray-200">|</span>
+            <span className="text-blue-400">💬 {store.commentCount ?? 0}</span>
             <span className="text-gray-200">|</span>
             <span className="text-red-400">♥ {store.favCount ?? 0}</span>
             <span className="text-gray-200">|</span>

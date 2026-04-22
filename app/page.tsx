@@ -19,6 +19,7 @@ export default async function HomePage({
   const creatorIds = [...new Set((stores as any[]).map(s => s.created_by).filter(Boolean))]
   const profileMap: Record<string, string> = {}
   const favCountMap: Record<string, number> = {}
+  const commentCountMap: Record<string, number> = {}
 
   await Promise.all([
     (async () => {
@@ -39,12 +40,23 @@ export default async function HomePage({
         favCountMap[f.store_id] = (favCountMap[f.store_id] ?? 0) + 1
       }
     })(),
+    (async () => {
+      if (storeIds.length === 0) return
+      const { data: commentData } = await supabase
+        .from('store_comments')
+        .select('store_id')
+        .in('store_id', storeIds)
+      for (const c of commentData ?? []) {
+        commentCountMap[c.store_id] = (commentCountMap[c.store_id] ?? 0) + 1
+      }
+    })(),
   ])
 
   const enrichedStores = (stores as any[]).map(s => ({
     ...s,
     creatorNickname: profileMap[s.created_by] ?? '',
     favCount: favCountMap[s.id] ?? 0,
+    commentCount: commentCountMap[s.id] ?? 0,
   }))
 
   const isMapView = view === 'map'
