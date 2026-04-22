@@ -112,7 +112,7 @@ export default function FilterBar() {
                 : 'border-gray-300 bg-white text-gray-600 hover:border-gray-500'
             }`}
           >
-            테마별{category ? `: ${category}` : ''}
+            테마<span className="hidden sm:inline">별</span>{category ? `: ${category}` : ''}
             <span className="text-xs">{openFilter === 'category' ? '▲' : '▼'}</span>
           </button>
           {openFilter === 'category' && (
@@ -137,7 +137,7 @@ export default function FilterBar() {
                 : 'border-gray-300 bg-white text-gray-600 hover:border-gray-500'
             }`}
           >
-            지역별{region ? `: ${region}` : ''}
+            지역<span className="hidden sm:inline">별</span>{region ? `: ${region}` : ''}
             <span className="text-xs">{openFilter === 'region' ? '▲' : '▼'}</span>
           </button>
           {openFilter === 'region' && (
@@ -167,7 +167,7 @@ export default function FilterBar() {
               : 'border-gray-300 bg-white text-gray-600 hover:border-gray-500'
           }`}
         >
-          {isMapView ? '리스트 보기' : '지도로 보기'}
+          {isMapView ? <><span className="sm:hidden">리스트</span><span className="hidden sm:inline">리스트 보기</span></> : <><span className="sm:hidden">지도</span><span className="hidden sm:inline">지도로 보기</span></>}
         </button>
       </div>
 
