@@ -23,6 +23,6 @@ export const getStores = unstable_cache(
     const { data } = await query
     return data ?? []
   },
-  ['stores-v3'],
+  ['stores-v4'],
   { revalidate: 3600, tags: ['stores'] }
 )
