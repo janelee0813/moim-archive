@@ -33,11 +33,11 @@ export default function StoreList({ stores }: { stores: Store[] }) {
             <span className="text-gray-200">|</span>
             <span>지역</span>
             <span className="text-gray-200">|</span>
-            <span>댓글</span>
-            <span className="text-gray-200">|</span>
             <span>찜</span>
             <span className="text-gray-200">|</span>
             <span>별점</span>
+            <span className="text-gray-200">|</span>
+            <span>댓글</span>
           </div>
         </div>
       </div>
