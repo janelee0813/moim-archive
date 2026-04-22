@@ -6,6 +6,7 @@ import { updateNickname } from '@/app/actions/profile'
 
 export default function NicknameForm({ currentNickname }: { currentNickname: string }) {
   const [editing, setEditing] = useState(false)
+  const [nickname, setNickname] = useState(currentNickname)
   const [error, setError] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
   const [pending, startTransition] = useTransition()
@@ -13,6 +14,7 @@ export default function NicknameForm({ currentNickname }: { currentNickname: str
 
   function handleSubmit(formData: FormData) {
     setError(null)
+    formData.set('nickname', nickname)
     startTransition(async () => {
       const result = await updateNickname(formData)
       if (result?.error) {
@@ -33,7 +35,8 @@ export default function NicknameForm({ currentNickname }: { currentNickname: str
         <form action={handleSubmit} className="flex items-center gap-2">
           <input
             name="nickname"
-            defaultValue={currentNickname}
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
             autoFocus
             maxLength={20}
             className="flex-1 border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-black"
