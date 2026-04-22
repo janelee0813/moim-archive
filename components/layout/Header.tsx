@@ -28,7 +28,7 @@ export default async function Header() {
         <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
           {!user ? (
             <>
-              <Link href="/login" className="text-gray-500 hover:text-gray-900 transition-colors hidden sm:block">
+              <Link href="/login" className="text-gray-500 hover:text-gray-900 transition-colors">
                 로그인
               </Link>
               <Link
