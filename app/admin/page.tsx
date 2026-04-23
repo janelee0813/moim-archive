@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import AdminUserTable from '@/components/admin/AdminUserTable'
 
 export default async function AdminPage() {
   const supabase = await createClient()
@@ -16,42 +17,65 @@ export default async function AdminPage() {
 
   if (!profile?.is_admin) redirect('/')
 
-  const { count: pendingCount } = await supabase
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'pending')
+  const [
+    { count: memberCount },
+    { count: storeCount },
+    { count: commentCount },
+    { count: favoriteCount },
+    { data: allUsers },
+  ] = await Promise.all([
+    supabase.from('profiles').select('*', { count: 'exact', head: true }),
+    supabase.from('stores').select('*', { count: 'exact', head: true }),
+    supabase.from('store_comments').select('*', { count: 'exact', head: true }),
+    supabase.from('favorites').select('*', { count: 'exact', head: true }),
+    supabase.from('profiles').select('*').order('created_at', { ascending: false }),
+  ])
 
-  const { count: storeCount } = await supabase
-    .from('stores')
-    .select('*', { count: 'exact', head: true })
+  const stats = [
+    { label: '총 회원', value: memberCount ?? 0, unit: '명' },
+    { label: '등록된 가게', value: storeCount ?? 0, unit: '곳' },
+    { label: '댓글', value: commentCount ?? 0, unit: '개' },
+    { label: '즐겨찾기', value: favoriteCount ?? 0, unit: '개' },
+  ]
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-8">관리자 대시보드</h1>
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="border rounded-xl p-6">
-          <p className="text-sm text-gray-500 mb-1">승인 대기 회원</p>
-          <p className="text-3xl font-bold">{pendingCount ?? 0}</p>
+
+      <section className="mb-10">
+        <h2 className="text-lg font-semibold mb-4">서비스 현황</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {stats.map(({ label, value, unit }) => (
+            <div key={label} className="border rounded-xl px-5 py-4 bg-white">
+              <p className="text-xs text-gray-400 mb-1">{label}</p>
+              <p className="text-2xl font-bold">
+                {value.toLocaleString()}
+                <span className="text-sm font-normal text-gray-400 ml-1">{unit}</span>
+              </p>
+            </div>
+          ))}
         </div>
-        <div className="border rounded-xl p-6">
-          <p className="text-sm text-gray-500 mb-1">등록된 가게</p>
-          <p className="text-3xl font-bold">{storeCount ?? 0}</p>
+      </section>
+
+      <section className="mb-10">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">전체 회원</h2>
+          <Link href="/admin/users" className="text-sm text-gray-400 hover:text-black">
+            전체보기 →
+          </Link>
         </div>
-      </div>
-      <div className="flex gap-3">
-        <Link
-          href="/admin/users"
-          className="px-4 py-2 bg-black text-white rounded-lg text-sm hover:bg-gray-800"
-        >
-          회원 관리
-        </Link>
+        <AdminUserTable users={allUsers ?? []} type="all" />
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-4">가게 관리</h2>
         <Link
           href="/admin/stores"
           className="px-4 py-2 border rounded-lg text-sm hover:bg-gray-50"
         >
-          가게 관리
+          가게 목록 보기
         </Link>
-      </div>
+      </section>
     </div>
   )
 }
