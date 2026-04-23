@@ -34,7 +34,7 @@ export default async function AdminStoresPage() {
 
       <div className="border border-gray-200 rounded-xl overflow-hidden">
         {/* 데스크탑 헤더 */}
-        <div className="hidden sm:grid grid-cols-[1fr_90px_90px_60px_140px_100px] gap-4 px-4 py-2.5 bg-gray-50 border-b border-gray-200 text-xs text-gray-400 font-medium">
+        <div className="hidden sm:grid grid-cols-[1fr_90px_90px_60px_140px_120px] gap-4 px-4 py-2.5 bg-gray-50 border-b border-gray-200 text-xs text-gray-400 font-medium">
           <span>가게 이름</span>
           <span>카테고리</span>
           <span>지역</span>
@@ -51,7 +51,7 @@ export default async function AdminStoresPage() {
           stores.map(store => (
             <div key={store.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
               {/* 데스크탑 레이아웃 */}
-              <div className="hidden sm:grid grid-cols-[1fr_90px_90px_60px_140px_100px] gap-4 px-4 py-3 items-center">
+              <div className="hidden sm:grid grid-cols-[1fr_90px_90px_60px_140px_120px] gap-4 px-4 py-3 items-center">
                 <Link href={`/stores/${store.id}`} className="text-sm font-medium text-gray-900 truncate hover:underline">
                   {store.name}
                 </Link>

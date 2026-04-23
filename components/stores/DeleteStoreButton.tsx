@@ -28,7 +28,7 @@ export default function DeleteStoreButton({ storeId, compact = false }: { storeI
       disabled={loading}
       className={`transition-colors disabled:opacity-50 ${
         compact
-          ? `text-xs px-2 py-1 rounded ${confirm ? 'bg-red-500 text-white' : 'border border-red-300 text-red-500 hover:bg-red-50'}`
+          ? `text-xs px-2 py-1 rounded whitespace-nowrap ${confirm ? 'bg-red-500 text-white' : 'border border-red-300 text-red-500 hover:bg-red-50'}`
           : `px-4 py-2 rounded-lg text-sm font-medium ${confirm ? 'bg-red-500 text-white hover:bg-red-600' : 'border border-red-300 text-red-500 hover:bg-red-50'}`
       }`}
     >
