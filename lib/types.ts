@@ -1,4 +1,4 @@
-export type UserStatus = 'pending' | 'approved' | 'rejected'
+export type UserStatus = 'pending' | 'approved' | 'rejected' | 'deactivated'
 
 export interface Profile {
   id: string

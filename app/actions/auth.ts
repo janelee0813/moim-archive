@@ -17,21 +17,21 @@ export async function signUp(formData: FormData) {
     return { error: error?.message ?? '회원가입 실패' }
   }
 
-  // 2. profiles 테이블에 pending 상태로 INSERT
+  // 2. profiles 테이블에 approved 상태로 INSERT
   const { error: profileError } = await supabase
     .from('profiles')
     .insert({
       id: data.user.id,
       email,
       nickname,
-      status: 'pending',
+      status: 'approved',
     })
 
   if (profileError) {
     return { error: '프로필 생성 실패: ' + profileError.message }
   }
 
-  redirect('/pending-approval')
+  redirect('/')
 }
 
 export async function signIn(formData: FormData) {
@@ -57,7 +57,7 @@ export async function signIn(formData: FormData) {
     .single()
 
   if (profile?.status === 'pending') redirect('/pending-approval')
-  if (profile?.status === 'rejected') redirect('/rejected')
+  if (profile?.status === 'rejected' || profile?.status === 'deactivated') redirect('/rejected')
 
   redirect('/')
 }

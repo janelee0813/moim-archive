@@ -88,7 +88,6 @@ export default function StoreForm({ initialData }: Props) {
     setError(null)
 
     try {
-      // 제어 컴포넌트 값을 formData에 명시적으로 설정
       formData.set('address', address)
 
       if (address && kakaoReady) {
@@ -114,12 +113,11 @@ export default function StoreForm({ initialData }: Props) {
       if (result?.error) {
         setError(result.error)
         setLoading(false)
+      } else {
+        // 리다이렉트가 일어나지 않은 경우 로딩 해제
+        setLoading(false)
       }
     } catch (e: unknown) {
-      // Next.js redirect는 에러를 던지므로 다시 던져야 함
-      if (e instanceof Error && (e as any).digest?.startsWith('NEXT_REDIRECT')) {
-        throw e
-      }
       setError('오류가 발생했어요. 다시 시도해주세요.')
       setLoading(false)
     }
@@ -127,6 +125,10 @@ export default function StoreForm({ initialData }: Props) {
 
   return (
     <form action={handleSubmit} className="space-y-5">
+      {error && (
+        <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+      )}
+
       <div>
         <label className="block text-sm font-medium mb-1">가게명 *</label>
         <input
@@ -250,10 +252,6 @@ export default function StoreForm({ initialData }: Props) {
           ))}
         </div>
       </div>
-
-      {error && (
-        <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
-      )}
 
       {!isEdit && (
         <p className="text-xs text-gray-400 text-center">

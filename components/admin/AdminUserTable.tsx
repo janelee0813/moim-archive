@@ -1,6 +1,6 @@
 'use client'
 
-import { approveUser, rejectUser, toggleAdmin } from '@/app/actions/admin'
+import { approveUser, rejectUser, toggleAdmin, deactivateUser } from '@/app/actions/admin'
 import { Profile } from '@/lib/types'
 import { useState } from 'react'
 
@@ -41,16 +41,27 @@ export default function AdminUserTable({ users, type }: Props) {
     setLoadingId(null)
   }
 
+  async function handleDeactivate(userId: string) {
+    if (!confirm('정말 탈퇴 처리하시겠어요?')) return
+    setError(null)
+    setLoadingId(userId)
+    const result = await deactivateUser(userId)
+    if (result?.error) setError(result.error)
+    setLoadingId(null)
+  }
+
   const statusLabel: Record<string, string> = {
     pending: '대기',
     approved: '승인',
     rejected: '거절',
+    deactivated: '탈퇴',
   }
 
   const statusColor: Record<string, string> = {
     pending: 'bg-yellow-100 text-yellow-700',
     approved: 'bg-green-100 text-green-700',
     rejected: 'bg-red-100 text-red-700',
+    deactivated: 'bg-gray-100 text-gray-500',
   }
 
   return (
@@ -67,7 +78,10 @@ export default function AdminUserTable({ users, type }: Props) {
               <th className="text-left px-4 py-3 font-medium">신청일</th>
               <th className="text-left px-4 py-3 font-medium">상태</th>
               {type === 'all' && (
-                <th className="text-left px-4 py-3 font-medium">관리자</th>
+                <>
+                  <th className="text-left px-4 py-3 font-medium">관리자</th>
+                  <th className="text-left px-4 py-3 font-medium">탈퇴</th>
+                </>
               )}
               {type === 'pending' && (
                 <th className="text-left px-4 py-3 font-medium">처리</th>
@@ -88,19 +102,34 @@ export default function AdminUserTable({ users, type }: Props) {
                   </span>
                 </td>
                 {type === 'all' && (
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => handleToggleAdmin(user.id, user.is_admin)}
-                      disabled={loadingId === user.id}
-                      className={`px-3 py-1 text-xs rounded-lg border transition-colors disabled:opacity-50 ${
-                        user.is_admin
-                          ? 'bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-200'
-                          : 'bg-white text-gray-500 border-gray-300 hover:bg-gray-50'
-                      }`}
-                    >
-                      {user.is_admin ? '관리자 ✓' : '관리자 지정'}
-                    </button>
-                  </td>
+                  <>
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => handleToggleAdmin(user.id, user.is_admin)}
+                        disabled={loadingId === user.id}
+                        className={`px-3 py-1 text-xs rounded-lg border transition-colors disabled:opacity-50 ${
+                          user.is_admin
+                            ? 'bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-200'
+                            : 'bg-white text-gray-500 border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        {user.is_admin ? '관리자 ✓' : '관리자 지정'}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      {user.status !== 'deactivated' ? (
+                        <button
+                          onClick={() => handleDeactivate(user.id)}
+                          disabled={loadingId === user.id}
+                          className="px-3 py-1 text-xs rounded-lg border border-red-200 text-red-500 hover:bg-red-50 disabled:opacity-50"
+                        >
+                          탈퇴
+                        </button>
+                      ) : (
+                        <span className="text-xs text-gray-400">탈퇴됨</span>
+                      )}
+                    </td>
+                  </>
                 )}
                 {type === 'pending' && (
                   <td className="px-4 py-3">

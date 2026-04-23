@@ -75,7 +75,7 @@ export async function updateStore(storeId: string, formData: FormData) {
   const latStr = formData.get('lat') as string
   const lngStr = formData.get('lng') as string
 
-  const { error } = await supabase
+  const { data: updated, error } = await supabase
     .from('stores')
     .update({
       name: formData.get('name') as string,
@@ -91,8 +91,10 @@ export async function updateStore(storeId: string, formData: FormData) {
       lng: lngStr ? parseFloat(lngStr) : null,
     })
     .eq('id', storeId)
+    .select('id')
 
   if (error) return { error: error.message }
+  if (!updated || updated.length === 0) return { error: 'DB 권한 오류: Supabase RLS 정책에서 관리자 UPDATE 허용이 필요해요.' }
 
   updateTag('stores')
   revalidatePath(`/stores/${storeId}`)
